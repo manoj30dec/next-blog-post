@@ -1,7 +1,18 @@
-import NextAuth from "next-auth"
+import NextAuth, { Session, User } from "next-auth"
 import GitHub from "next-auth/providers/github"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { db } from "./db"
+import "next-auth";
+declare module "next-auth" {
+    interface Session {
+        user: {
+            id: string;
+            name?: string | null;
+            email?: string | null;
+            image?: string | null;
+        };
+    }
+}
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
@@ -20,8 +31,8 @@ export const { handlers: { GET, POST }, auth, signOut, signIn } = NextAuth({
     ],
     callbacks: {
         // Usually not needed, here we are fixing a bug in nextauth
-        async session({ session, user }: any) {
-            if (session && user) {
+        async session({ session, user }: { session: Session; user: User }) {
+            if (session.user && user?.id) {
                 session.user.id = user.id
             }
             return session;
