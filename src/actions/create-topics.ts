@@ -18,6 +18,10 @@ interface CreateTopicFormState {
     }
 }
 export async function createTopics(formState: CreateTopicFormState, formData: FormData): Promise<CreateTopicFormState> {
+
+    // intetional delay to show laoding
+    await new Promise(resolve => setTimeout(resolve, 2500))
+
     // todo: revalidate the home page after create topic
     const result = createTopicSchema.safeParse({
         name: formData.get('name'),

@@ -2,11 +2,12 @@
 import { createTopics } from "@/actions"
 // import * as actions from "@/actions"
 import { Input, Button, Textarea, Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react"
-import { useActionState, startTransition } from "react"
+import { useActionState } from "react"
+import FormButton from "../common/form-button"
 export default function TopicCreateForm() {
-    const [formState, action] = useActionState(createTopics, {
-        errors: {}
-    })
+    const [formState, action, isPending] = useActionState(createTopics, {
+        errors: {},
+    });
     return (
         <Popover placement="left">
             <PopoverTrigger>
@@ -24,7 +25,8 @@ export default function TopicCreateForm() {
 
                         {formState.errors._form ? <div className="p-2 bg-red-200 border border-red-400 rounded">{formState.errors._form?.join(',')}</div> : null}
 
-                        <Button type="submit">Submit</Button>
+                        {/* <Button type="submit">Submit</Button> */}
+                        <FormButton isLoading={isPending}>Save</FormButton>
                     </div>
                 </form>
             </PopoverContent>
